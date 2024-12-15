@@ -2,6 +2,12 @@ local uitls = require("funline.utils")
 local config = require("funline.config")
 local default_config = config.default
 
+---@class Component_props
+---@field condition boolean
+---@field icon string
+---@field provider string
+---@field hl table
+---@field interval? number
 local DEFAULT_PROPS = {
   condition = true,
   icon = "",
@@ -10,6 +16,10 @@ local DEFAULT_PROPS = {
   interval = nil,
 }
 
+---@class Component
+---@field name? string
+---@field timer? Timer
+---@field props? Component_props
 local Component = {
   name = nil,
   timer = nil,
