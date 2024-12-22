@@ -2,11 +2,12 @@ local uitls = require("funline.utils")
 local config = require("funline.config")
 local default_config = config.default
 
+-- default props
 ---@class Component_props
 ---@field condition boolean
 ---@field icon string
 ---@field provider string
----@field hl table
+---@field hl vim.api.keyset.highlight
 ---@field interval? number
 local DEFAULT_PROPS = {
   condition = true,
@@ -16,6 +17,7 @@ local DEFAULT_PROPS = {
   interval = nil,
 }
 
+-- component
 ---@class Component
 ---@field name? string
 ---@field timer? Timer
@@ -28,38 +30,34 @@ local Component = {
 
 Component.__index = Component
 
--- 创建组件的函数
 Component = setmetatable(Component, {
   __call = function(self, name, timer, props) return self:new(name, timer, props) end,
 })
 
-local allowed_props = {
+local ALLOWED_PROPS = {
   condition = true,
   icon = true,
   provider = true,
   hl = true,
 }
 
--- 组件的构造函数
 function Component:new(name, timer, props)
   local instance = setmetatable({}, self)
   instance:init(name, timer, props)
   return instance
 end
 
--- 设置组件的属性
 function Component:init(name, timer, props)
   self.name = name
   self.timer = timer
   self.props = props
 end
 
--- 校验组件的props属性
 function Component:validate(props)
   local validateProps = {}
 
   for key, value in pairs(props or {}) do
-    if not allowed_props[key] then
+    if not ALLOWED_PROPS[key] then
       error(string.format("[%s]Invalid prop: %s", self.name, key))
     end
     validateProps[key] = value
@@ -78,9 +76,9 @@ function Component:callback(fn)
   return props
 end
 
--- 格式化组件
 function Component:format(icon, provider, hl)
   local component
+
   if #icon > 0 and #provider > 0 then
     component = string.format("%s %s", icon, provider)
   elseif #icon > 0 and #provider == 0 then
@@ -97,16 +95,17 @@ function Component:format(icon, provider, hl)
   return uitls.set_hl(hl_group, component, true)
 end
 
--- 加载组件
 function Component:load()
   local loader = function()
     local props
+
     if type(self.props) == "table" then
       props = self.props
     end
     if type(self.props) == "function" then
       props = self:callback(self.props)
     end
+
     local validateProps = self:validate(props)
     local merged_props = vim.tbl_extend("force", DEFAULT_PROPS, validateProps)
 

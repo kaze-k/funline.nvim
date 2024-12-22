@@ -1,19 +1,22 @@
 local M = {}
 
+-- line config
 ---@class Line
 ---@field left? table
 ---@field mid? table
 ---@field right? table
 
+-- refresh config
 ---@class Refresh
 ---@field timeout? number
 ---@field interval? number
 
+-- config
 ---@class Config
 ---@field statusline? Line
 ---@field specialline? Line
 ---@field specialtypes? table
----@field highlight? table
+---@field highlight? vim.api.keyset.highlight
 ---@field refresh? Refresh
 ---@field handler? function
 M.default = {

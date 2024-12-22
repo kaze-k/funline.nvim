@@ -1,16 +1,18 @@
 local uv = vim.uv
 
----@class TimerStatus
+-- timer status
+---@class Timer_status
 ---@field isStop boolean
 local status = {
   isStop = true,
 }
 
+-- timer
 ---@class Timer
 ---@field uv_timer? uv_timer_t
----@field timeout number
----@field interval number
----@field status TimerStatus
+---@field timeout integer
+---@field interval integer
+---@field status Timer_status
 local Timer = {
   uv_timer = nil,
   timeout = 0,
@@ -23,15 +25,16 @@ Timer.__index = Timer
 ---@type Timer | nil
 local instance = nil
 
+-- component interval queue
 local component_intervals = {}
 
 function Timer:new(options)
-  local timer = self:getInstance()
+  local timer = self:get_instance()
   timer:init(options)
   return timer
 end
 
-function Timer:getInstance()
+function Timer:get_instance()
   if instance == nil then
     instance = setmetatable({}, self)
   end
@@ -55,15 +58,6 @@ function Timer:init(options)
   end
 end
 
-function Timer:start(fn)
-  if self.uv_timer == nil then
-    self.uv_timer = uv.new_timer()
-  end
-  self.status.isStop = false
-  local callback = vim.schedule_wrap(fn)
-  self.uv_timer:start(self.timeout, self.interval, callback)
-end
-
 function Timer:get_fastest_interval()
   local fastest = nil
   for _, interval in pairs(component_intervals) do
@@ -76,15 +70,15 @@ end
 
 function Timer:reset()
   local fastest = self:get_fastest_interval()
+  local current_interval = self.uv_timer:get_repeat()
 
   if fastest == nil then
-    if self.uv_timer:get_repeat() ~= self.interval then
+    if current_interval ~= self.interval then
       self.uv_timer:set_repeat(self.interval)
     end
     return
   end
 
-  local current_interval = self.uv_timer:get_repeat()
   if fastest < self.interval and fastest ~= current_interval then
     self.uv_timer:set_repeat(fastest)
   else
@@ -107,6 +101,15 @@ function Timer:done(name)
   end
 end
 
+function Timer:start(fn)
+  if self.uv_timer == nil then
+    self.uv_timer = uv.new_timer()
+  end
+  self.status.isStop = false
+  local callback = vim.schedule_wrap(fn)
+  self.uv_timer:start(self.timeout, self.interval, callback)
+end
+
 function Timer:stop()
   if self.uv_timer then
     self.uv_timer:stop()
@@ -116,7 +119,7 @@ end
 
 function Timer:close(callback)
   if self.uv_timer then
-    self.uv_timer:close(callback())
+    self.uv_timer:close(callback)
   end
 end
 
