@@ -1,4 +1,4 @@
-local Component = require("funline.component_")
+local Component = require("funline.component")
 local Timer = require("funline.timer")
 
 local config = require("funline.config")

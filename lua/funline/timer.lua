@@ -23,7 +23,7 @@ Timer.__index = Timer
 ---@type Timer | nil
 local instance = nil
 
-local DEFAULT_INTERVAL = nil
+local component_intervals = {}
 
 function Timer:new(options)
   local timer = self:getInstance()
@@ -47,7 +47,6 @@ function Timer:init(options)
     end
     if options.interval and options.interval > 0 then
       self.interval = options.interval
-      DEFAULT_INTERVAL = options.interval
     end
   end
 
@@ -65,24 +64,46 @@ function Timer:start(fn)
   self.uv_timer:start(self.timeout, self.interval, callback)
 end
 
-function Timer:reset(interval)
-  if self.uv_timer and not self.status.isStop then
-    if interval == 0 then
-      if DEFAULT_INTERVAL then
-        self.interval = DEFAULT_INTERVAL
-        self.uv_timer:set_repeat(self.interval)
-      end
-      return
+function Timer:get_fastest_interval()
+  local fastest = nil
+  for _, interval in pairs(component_intervals) do
+    if fastest == nil or interval < fastest then
+      fastest = interval
     end
+  end
+  return fastest
+end
 
-    if interval > 0 and interval < self.interval then
-      self.interval = interval
-      self.uv_timer:set_repeat(self.interval)
-    elseif interval >= self.interval then
+function Timer:reset()
+  local fastest = self:get_fastest_interval()
+
+  if fastest == nil then
+    if self.uv_timer:get_repeat() ~= self.interval then
       self.uv_timer:set_repeat(self.interval)
     end
+    return
+  end
 
-    self.uv_timer:again()
+  local current_interval = self.uv_timer:get_repeat()
+  if fastest < self.interval and fastest ~= current_interval then
+    self.uv_timer:set_repeat(fastest)
+  else
+    self.uv_timer:set_repeat(self.interval)
+  end
+  self.uv_timer:again()
+end
+
+function Timer:refresh(interval, name)
+  if not component_intervals[name] or component_intervals[name] ~= interval then
+    component_intervals[name] = interval
+    self:reset()
+  end
+end
+
+function Timer:done(name)
+  if component_intervals[name] then
+    component_intervals[name] = nil
+    self:reset()
   end
 end
 

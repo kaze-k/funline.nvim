@@ -33,6 +33,13 @@ Component = setmetatable(Component, {
   __call = function(self, name, timer, props) return self:new(name, timer, props) end,
 })
 
+local allowed_props = {
+  condition = true,
+  icon = true,
+  provider = true,
+  hl = true,
+}
+
 -- 组件的构造函数
 function Component:new(name, timer, props)
   local instance = setmetatable({}, self)
@@ -49,24 +56,26 @@ end
 
 -- 校验组件的props属性
 function Component:validate(props)
-  local allowed_props = {
-    condition = true,
-    icon = true,
-    provider = true,
-    hl = true,
-    interval = true,
-  }
-
   local validateProps = {}
 
   for key, value in pairs(props or {}) do
     if not allowed_props[key] then
-      error(string.format("Invalid prop: %s", key))
+      error(string.format("[%s]Invalid prop: %s", self.name, key))
     end
     validateProps[key] = value
   end
 
   return validateProps
+end
+
+function Component:callback(fn)
+  local refresh = function(interval) self.timer:refresh(interval, self.name) end
+
+  local done = function() self.timer:done(self.name) end
+
+  local props = fn(refresh, done)
+
+  return props
 end
 
 -- 格式化组件
@@ -92,10 +101,11 @@ end
 function Component:load()
   local loader = function()
     local props
-    if type(self.props) ~= "function" then
+    if type(self.props) == "table" then
       props = self.props
-    else
-      props = self.props()
+    end
+    if type(self.props) == "function" then
+      props = self:callback(self.props)
     end
     local validateProps = self:validate(props)
     local merged_props = vim.tbl_extend("force", DEFAULT_PROPS, validateProps)
@@ -104,17 +114,12 @@ function Component:load()
     local icon = uitls.escape(tostring(merged_props.icon), "%")
     local provider = uitls.escape(tostring(merged_props.provider), "%")
     local hl = merged_props.hl
-    local interval = tonumber(merged_props.interval)
 
     if not condition then
       return ""
     end
 
     local component = self:format(icon, provider, hl)
-
-    if interval then
-      self.timer:reset(interval)
-    end
 
     return component
   end
