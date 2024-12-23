@@ -1,23 +1,4 @@
--- local uv = vim.uv
---
 local M = {}
-
--- function M.exec_func(fn, timer, default)
---   local ok, result = pcall(fn)
---
---   if not ok then
---     if timer and not uv.is_closing(timer) then
---       uv.close(timer)
---     end
---     return error("Error occurred: " .. result)
---   end
---
---   if result == nil then
---     return default
---   end
---
---   return result
--- end
 
 M.merge_config = function(opts, defalut)
   local validation = type(opts) == "table"

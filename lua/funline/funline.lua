@@ -17,7 +17,7 @@ local setup = {
 }
 
 -- funline status
----@class Funline_status
+---@class Funline.Status
 ---@field isUpdate boolean
 ---@field isClose boolean
 local status = {
@@ -29,7 +29,7 @@ local status = {
 ---@class Funline
 ---@field timer Timer?
 ---@field autocmd_id integer?
----@field status Funline_status
+---@field status Funline.Status
 ---@field setup Config
 local Funline = {
   timer = nil,
@@ -42,6 +42,8 @@ Funline.__index = Funline
 
 ---@type Funline | nil
 local instance = nil
+
+local setup_config = nil
 
 local events = {
   "WinEnter",
@@ -59,7 +61,6 @@ local events = {
   "CursorMoved",
   "CursorMovedI",
   "ModeChanged",
-  -- "Colorscheme",
   "SearchWrapped",
   "LspAttach",
   "LspDetach",
@@ -68,24 +69,30 @@ local events = {
   "LspRequest",
 }
 
-function Funline:new(options)
-  local funline = self:get_instance(options)
-
-  local handle_render = function()
-    funline:update_handler()
-    if funline:get_status() then
-      funline:render()
+local handle_render = function()
+  if instance then
+    instance:update_handler()
+    if instance:get_status() then
+      instance:render()
     end
   end
+end
 
-  local fn = function()
-    funline:set_status({ isUpdate = true })
-    funline:validate(handle_render)
+local run = function()
+  if instance then
+    instance:set_status({ isUpdate = true })
+    instance:validate(handle_render)
   end
+end
 
-  -- fn()
-  funline:create_autocmd(fn)
-  funline.timer:start(fn)
+function Funline:new(options)
+  setup_config = options
+
+  instance = self:get_instance(setup_config)
+
+  -- run()
+  instance:create_autocmd(run)
+  instance.timer:start(run)
 end
 
 function Funline:get_instance(options)
@@ -241,51 +248,58 @@ function Funline:destroy()
   if self.timer then
     self.timer:stop()
     if not self.timer.uv_timer:is_closing() then
-      local callback = function()
+      local fn = function()
         self:set_status({ isClose = true })
         self.timer = nil
         instance = nil
       end
-      self.timer:close(callback)
+      self.timer:close(fn)
     end
   end
   self:restore_statusline()
 end
 
-function Funline:open(options)
+function Funline:open()
   if instance == nil then
-    self:new(options)
+    self:new(setup_config)
   end
 end
 
 function Funline:close()
   if instance then
-    local funline = self:get_instance(self.setup)
-    if not funline.status.isClose then
-      funline:destroy()
+    if not instance.status.isClose then
+      instance:destroy()
     end
   end
 end
 
-function Funline:toggle(options)
+function Funline:toggle()
   if instance then
-    local funline = self:get_instance(self.setup)
-    if not funline.status.isClose then
-      funline:close()
+    if not instance.status.isClose then
+      instance:close()
     end
   else
-    self:open(options)
+    self:open()
   end
 end
 
 function Funline:stop()
-  local funline = self:get_instance(self.setup)
-  funline.timer:stop()
+  if instance then
+    instance.timer:stop()
+  end
 end
 
 function Funline:start()
-  local funline = self:get_instance(self.setup)
-  funline:new(self.setup)
+  if instance then
+    instance.timer:start(run)
+  end
+end
+
+function Funline:reload(options)
+  if instance then
+    instance:new(options)
+  end
+  self:new(options)
 end
 
 return Funline

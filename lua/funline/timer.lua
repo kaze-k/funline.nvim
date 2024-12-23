@@ -1,7 +1,7 @@
 local uv = vim.uv
 
 -- timer status
----@class Timer_status
+---@class Timer.Status
 ---@field isStop boolean
 local status = {
   isStop = true,
@@ -12,7 +12,7 @@ local status = {
 ---@field uv_timer? uv_timer_t
 ---@field timeout integer
 ---@field interval integer
----@field status Timer_status
+---@field status Timer.Status
 local Timer = {
   uv_timer = nil,
   timeout = 0,

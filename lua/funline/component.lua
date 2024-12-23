@@ -3,7 +3,7 @@ local config = require("funline.config")
 local default_config = config.default
 
 -- default props
----@class Component_props
+---@class Component.Props
 ---@field condition boolean
 ---@field icon string
 ---@field provider string
@@ -21,7 +21,7 @@ local DEFAULT_PROPS = {
 ---@class Component
 ---@field name? string
 ---@field timer? Timer
----@field props? Component_props
+---@field props? Component.Props
 local Component = {
   name = nil,
   timer = nil,
@@ -72,6 +72,10 @@ function Component:callback(fn)
   local done = function() self.timer:done(self.name) end
 
   local props = fn(refresh, done)
+
+  if props and props.interval then
+    error(string.format("[%s]Invalid prop: interval, function should not return interval", self.name))
+  end
 
   return props
 end
