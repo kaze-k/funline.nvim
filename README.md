@@ -1,5 +1,5 @@
 <p align="center">
-  <h1>funline.nvim</h1>
+  <h1 align="center">funline.nvim</h1>
 </p>
 
 <p align="center">
