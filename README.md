@@ -26,5 +26,6 @@
 ## About
 
 Funline.nvim is a Neovim plugin made for rendering statusline format strings.
+
 It is a customizable plugin, you can put some fun things on your statusline display.
 
