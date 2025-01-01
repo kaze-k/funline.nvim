@@ -29,3 +29,65 @@ Funline.nvim is a Neovim plugin made for rendering statusline format strings.
 
 It is a customizable plugin, you can put some fun things on your statusline display.
 
+It was inspired by [galaxyline](https://github.com/nvimdev/galaxyline.nvim) and [heirline](https://github.com/rebelot/heirline.nvim).
+
+## Installation
+
+[lazy.nvim](https://github.com/folke/lazy.nvim)
+
+```lua
+{
+  "kaze-k/funline.nvim",
+  config = function()
+    require("my_statusline") -- your statusline config
+  end
+}
+```
+
+use [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim) if you happen to be using the same plugin as me.
+
+```lua
+{
+  "kaze-k/funline-base.nvim",
+  dependencies = { "kaze-k/funline.nvim" },
+  config = function()
+    require("funline-base").setup()
+  end
+}
+```
+
+## Setup
+
+[setup](https://github.com/kaze-k/funline.nvim/blob/main/lua/funline/config.lua)
+
+```lua
+require("funline").setup({
+  statusline = {
+    left = {...},
+    mid = {...},
+    right = {...},
+  },
+  specialline = {
+    left = {...},
+    mid = {...},
+    right = {...},
+  },
+  specialtypes = {},
+  highlight = { link = "StatusLine" },
+  refresh = {
+    timeout = 0,
+    interval = 1000,
+  },
+  -- when is the control updated
+  handler = function(update)
+    if ... then
+      update(true)
+    else
+      update(false)
+    end
+  end,
+})
+```
+
+You can also refer to [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim) for custom configuration.
+
