@@ -31,9 +31,13 @@ It is a customizable plugin, you can put some fun things on your statusline disp
 
 It was inspired by [galaxyline](https://github.com/nvimdev/galaxyline.nvim) and [heirline](https://github.com/rebelot/heirline.nvim).
 
+## Requires
+
+- [neovim 0.10.0+](https://github.com/neovim/neovim/releases/tag/v0.10.0)
+
 ## Installation
 
-[lazy.nvim](https://github.com/folke/lazy.nvim)
+- [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
 {
@@ -44,7 +48,7 @@ It was inspired by [galaxyline](https://github.com/nvimdev/galaxyline.nvim) and 
 }
 ```
 
-use [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim) if you happen to be using the same plugin as me.
+> use [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim) if you happen to be using the same plugin as me.
 
 ```lua
 {
@@ -58,7 +62,7 @@ use [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim) if you happ
 
 ## Setup
 
-[setup](https://github.com/kaze-k/funline.nvim/blob/main/lua/funline/config.lua)
+- [config](https://github.com/kaze-k/funline.nvim/blob/main/lua/funline/config.lua)
 
 ```lua
 require("funline").setup({
@@ -89,5 +93,12 @@ require("funline").setup({
 })
 ```
 
-You can also refer to [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim) for custom configuration.
+> You can also refer to [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim) for custom configuration.
+
+<p align="center">
+  <a href="https://github.com/kaze-k/funline.nvim/blob/main/LICENSE"
+    ><img
+      src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=282a36&colorB=c678dd"
+  /></a>
+</p>
 
