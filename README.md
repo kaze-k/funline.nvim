@@ -83,7 +83,7 @@ require("funline").setup({
     interval = 1000,
   },
   -- when is the control updated
-  handler = function(update)
+  handle_update = function(update)
     if ... then
       update(true)
     else

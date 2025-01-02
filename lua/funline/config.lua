@@ -18,7 +18,7 @@ local M = {}
 ---@field specialtypes? table
 ---@field highlight? vim.api.keyset.highlight
 ---@field refresh? Refresh
----@field handler? function
+---@field handle_update? function
 M.default = {
   statusline = {
     left = {},
@@ -36,7 +36,7 @@ M.default = {
     timeout = 0,
     interval = 1000,
   },
-  handler = nil,
+  handle_update = nil,
 }
 
 return M

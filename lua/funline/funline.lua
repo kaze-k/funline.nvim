@@ -13,7 +13,7 @@ local setup = {
   specialtypes = default.specialtypes,
   highlight = default.highlight,
   refresh = default.refresh,
-  handler = default.handler,
+  handle_update = default.handle_update,
 }
 
 -- funline status
@@ -120,8 +120,8 @@ function Funline:init(options)
     self.setup.refresh.interval = 0
   end
 
-  if type(self.setup.handler) == "function" then
-    self.setup.handler = options.handler
+  if type(self.setup.handle_update) == "function" then
+    self.setup.handle_update = options.handle_update
   end
 
   if self.timer == nil then
@@ -186,8 +186,8 @@ function Funline:set_highlight()
 end
 
 function Funline:update_handler()
-  if self.setup.handler then
-    self.setup.handler(function(update) self:set_status({ isUpdate = update }) end)
+  if self.setup.handle_update then
+    self.setup.handle_update(function(update) self:set_status({ isUpdate = update }) end)
   end
 end
 
