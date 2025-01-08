@@ -90,7 +90,6 @@ function Funline:new(options)
 
   instance = self:get_instance(setup_config)
 
-  -- run()
   instance:create_autocmd(run)
   instance.timer:start(run)
 end
