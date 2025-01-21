@@ -113,13 +113,11 @@ All default properties of the component.
 ---@field icon string
 ---@field provider string
 ---@field hl vim.api.keyset.highlight
----@field interval? number
 local DEFAULT_PROPS = {
   condition = true,
   icon = "",
   provider = "",
   hl = { link = "StatusLine" },
-  interval = nil,
 }
 ```
 
@@ -152,7 +150,6 @@ M.example = {
   icon = "😉", -- fun icon
   provider = "Hello, World!", -- display text
   hl = { fg = "#ff0000", bg = "#00ff00", bold = true }, -- highlight
-  interval = 1000, -- refresh every 1000ms
 }
 ```
 

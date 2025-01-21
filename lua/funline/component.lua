@@ -10,13 +10,11 @@ local Ctx = require("funline.ctx")
 ---@field icon string
 ---@field provider string
 ---@field hl vim.api.keyset.highlight
----@field interval? number
 local DEFAULT_PROPS = {
   condition = true,
   icon = "",
   provider = "",
   hl = default_config.highlight,
-  interval = nil,
 }
 
 -- component
@@ -37,13 +35,6 @@ Component.__index = Component
 Component = setmetatable(Component, {
   __call = function(self, name, timer, props) return self:new(name, timer, props) end,
 })
-
-local ALLOWED_PROPS = {
-  condition = true,
-  icon = true,
-  provider = true,
-  hl = true,
-}
 
 function Component:new(name, timer, props)
   local instance = setmetatable({}, self)
@@ -71,7 +62,7 @@ function Component:validate(props)
   local validateProps = {}
 
   for key, value in pairs(props or {}) do
-    if not ALLOWED_PROPS[key] then
+    if not DEFAULT_PROPS[key] then
       error(string.format("[%s]Invalid prop: %s", self.name, key))
     end
     validateProps[key] = value
@@ -82,10 +73,6 @@ end
 
 function Component:callback(fn)
   local props = fn(self.ctx)
-
-  if props and props.interval then
-    error(string.format("[%s]Invalid prop: interval, function should not return interval", self.name))
-  end
 
   return props
 end
