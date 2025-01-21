@@ -123,7 +123,7 @@ M.examples = function()
     condition = true, -- whether to display
     icon = "😉", -- fun icon
     provider = "Hello, World!", -- display text
-    hl = { fg = "#ff0000", bg = "#00ff00", bold = true }, -- highlight, refer to vim.api.keyset.highlight
+    hl = { fg = "#ff0000", bg = "#00ff00", bold = true }, -- highlight
     interval = 1000, -- refresh interval
   }
 end
