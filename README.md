@@ -93,6 +93,42 @@ require("funline").setup({
 })
 ```
 
+## Component Examples
+
+All default properties of the component.
+
+```lua
+-- default props
+---@class Component.Props
+---@field condition boolean
+---@field icon string
+---@field provider string
+---@field hl vim.api.keyset.highlight
+---@field interval? number
+local DEFAULT_PROPS = {
+  condition = true,
+  icon = "",
+  provider = "",
+  hl = { link = "StatusLine" },
+  interval = nil,
+}
+```
+
+> This is an example of a component.
+> All properties are optional because funline automatically adds default values.
+
+```lua
+M.examples = function()
+  return {
+    condition = true, -- whether to display
+    icon = "😉", -- fun icon
+    provider = "Hello, World!", -- display text
+    hl = { fg = "#ff0000", bg = "#00ff00", bold = true }, -- highlight, refer to vim.api.keyset.highlight
+    interval = 1000, -- refresh interval
+  }
+end
+```
+
 > You can also refer to [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim) for custom configuration.
 
 <p align="center">
