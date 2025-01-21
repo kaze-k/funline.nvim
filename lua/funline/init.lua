@@ -10,6 +10,7 @@ local function command()
   vim.api.nvim_create_user_command("FunlineClose", function() Funline:close() end, {})
   vim.api.nvim_create_user_command("FunlineStop", function() Funline:stop() end, {})
   vim.api.nvim_create_user_command("FunlineStart", function() Funline:start() end, {})
+  vim.api.nvim_create_user_command("FunlineReload", function() Funline:reload() end, {})
 end
 
 local function reload(options)

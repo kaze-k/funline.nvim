@@ -67,6 +67,7 @@ It was inspired by [galaxyline](https://github.com/nvimdev/galaxyline.nvim) and 
 - `:FunlineClose` close funline
 - `:FunlineStop` stop funline refresh
 - `:FunlineStart` start funline refresh
+- `:FunlineReload` reload funline
 
 ## Setup
 

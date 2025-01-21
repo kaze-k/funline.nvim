@@ -308,11 +308,11 @@ function Funline:start()
   end
 end
 
-function Funline:reload(options)
+function Funline:reload()
   if instance then
-    instance:new(options)
+    instance:new(setup_config)
   end
-  self:new(options)
+  self:new(setup_config)
 end
 
 return Funline
