@@ -122,19 +122,37 @@ local DEFAULT_PROPS = {
 }
 ```
 
-> This is an example of a component.
 > All properties are optional because funline automatically adds default values.
 
+- dynamic
+
 ```lua
-M.examples = function()
+M.examples = function(ctx)
+  if ... then
+    ctx.refresh(1000) -- refresh every 1000ms
+  else
+    ctx.done() -- stop this component refresh
+  end
+
   return {
     condition = true, -- whether to display
     icon = "😉", -- fun icon
     provider = "Hello, World!", -- display text
     hl = { fg = "#ff0000", bg = "#00ff00", bold = true }, -- highlight
-    interval = 1000, -- refresh interval
   }
 end
+```
+
+- static
+
+```lua
+M.examples = {
+  condition = true, -- whether to display
+  icon = "😉", -- fun icon
+  provider = "Hello, World!", -- display text
+  hl = { fg = "#ff0000", bg = "#00ff00", bold = true }, -- highlight
+  interval = 1000, -- refresh every 1000ms
+}
 ```
 
 > You can also refer to [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim) for custom configuration.
