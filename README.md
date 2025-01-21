@@ -60,6 +60,14 @@ It was inspired by [galaxyline](https://github.com/nvimdev/galaxyline.nvim) and 
 }
 ```
 
+## Commands
+
+- `:FunlineToggle` open/close funline
+- `:FunlineOpen` open funline
+- `:FunlineClose` close funline
+- `:FunlineStop` stop funline refresh
+- `:FunlineStart` start funline refresh
+
 ## Setup
 
 - [config](https://github.com/kaze-k/funline.nvim/blob/main/lua/funline/config.lua)
