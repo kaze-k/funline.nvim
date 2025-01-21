@@ -127,7 +127,7 @@ local DEFAULT_PROPS = {
 - dynamic
 
 ```lua
-M.examples = function(ctx)
+M.example = function(ctx)
   if ... then
     ctx.refresh(1000) -- refresh every 1000ms
   else
@@ -146,7 +146,7 @@ end
 - static
 
 ```lua
-M.examples = {
+M.example = {
   condition = true, -- whether to display
   icon = "😉", -- fun icon
   provider = "Hello, World!", -- display text
