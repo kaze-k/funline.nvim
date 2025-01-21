@@ -2,6 +2,8 @@ local uitls = require("funline.utils")
 local config = require("funline.config")
 local default_config = config.default
 
+local Ctx = require("funline.ctx")
+
 -- default props
 ---@class Component.Props
 ---@field condition boolean
@@ -22,10 +24,12 @@ local DEFAULT_PROPS = {
 ---@field name? string
 ---@field timer? Timer
 ---@field props? Component.Props
+---@field ctx? Ctx
 local Component = {
   name = nil,
   timer = nil,
   props = nil,
+  ctx = nil,
 }
 
 Component.__index = Component
@@ -48,9 +52,19 @@ function Component:new(name, timer, props)
 end
 
 function Component:init(name, timer, props)
+  local refresh = function(interval) self.timer:refresh(interval, self.name) end
+
+  local done = function() self.timer:done(self.name) end
+
+  local callbacks = {
+    refresh = refresh,
+    done = done,
+  }
+
   self.name = name
   self.timer = timer
   self.props = props
+  self.ctx = Ctx(callbacks)
 end
 
 function Component:validate(props)
@@ -67,11 +81,7 @@ function Component:validate(props)
 end
 
 function Component:callback(fn)
-  local refresh = function(interval) self.timer:refresh(interval, self.name) end
-
-  local done = function() self.timer:done(self.name) end
-
-  local props = fn(refresh, done)
+  local props = fn(self.ctx)
 
   if props and props.interval then
     error(string.format("[%s]Invalid prop: interval, function should not return interval", self.name))

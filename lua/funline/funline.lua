@@ -69,6 +69,8 @@ local events = {
   "LspRequest",
 }
 
+local isCalled = false
+
 local handle_render = function()
   if instance then
     instance:update_handler()
@@ -85,13 +87,25 @@ local run = function()
   end
 end
 
+local timer_callback = function()
+  run()
+  isCalled = true
+end
+
+local autocmd_callback = function()
+  if not isCalled then
+    run()
+  end
+  isCalled = false
+end
+
 function Funline:new(options)
   setup_config = options
 
   instance = self:get_instance(setup_config)
 
-  instance:create_autocmd(run)
-  instance.timer:start(run)
+  instance:create_autocmd(autocmd_callback)
+  instance.timer:start(timer_callback)
 end
 
 function Funline:get_instance(options)
