@@ -211,10 +211,30 @@ end
 
 function Funline:restore_statusline() vim.o.statusline = nil end
 
+function Funline:get_hl_val(val)
+  if type(val) == "function" then
+    return val()
+  else
+    return val
+  end
+end
+
 function Funline:set_highlights()
-  vim.api.nvim_set_hl(0, hl_groups.left, self.setup.highlights.left)
-  vim.api.nvim_set_hl(0, hl_groups.mid, self.setup.highlights.mid)
-  vim.api.nvim_set_hl(0, hl_groups.right, self.setup.highlights.right)
+  local left_val = self:get_hl_val(self.setup.highlights.left)
+  local mid_val = self:get_hl_val(self.setup.highlights.mid)
+  local right_val = self:get_hl_val(self.setup.highlights.right)
+
+  if left_val then
+    vim.api.nvim_set_hl(0, hl_groups.left, left_val)
+  end
+
+  if mid_val then
+    vim.api.nvim_set_hl(0, hl_groups.mid, mid_val)
+  end
+
+  if right_val then
+    vim.api.nvim_set_hl(0, hl_groups.right, right_val)
+  end
 end
 
 function Funline:update_handler()

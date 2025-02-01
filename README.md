@@ -93,9 +93,9 @@ It was inspired by [galaxyline](https://github.com/nvimdev/galaxyline.nvim) and 
 
 ---line highlights
 ---@class Highlights
----@field left? vim.api.keyset.highlight
----@field mid? vim.api.keyset.highlight
----@field right? vim.api.keyset.highlight
+---@field left? vim.api.keyset.highlight | function
+---@field mid? vim.api.keyset.highlight | function
+---@field right? vim.api.keyset.highlight | function
 
 -- refresh config
 ---@class Refresh
