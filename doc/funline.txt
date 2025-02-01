@@ -1,0 +1,194 @@
+*funline.nvim*  Nvim plugin for customizable statusline components
+
+======================================================================
+funline.nvim - A Neovim plugin for rendering statusline format strings
+======================================================================
+
+funline.nvim is a Neovim plugin made for rendering statusline format strings.
+It is highly customizable and can display fun things on your statusline.
+The plugin provides the ability to refresh the statusline at customizable intervals.
+
+Inspired by:
+- [galaxyline](https://github.com/nvimdev/galaxyline.nvim)
+- [heirline](https://github.com/rebelot/heirline.nvim)
+
+It is designed to be lightweight, flexible, and highly configurable.
+
+==============================================================================
+REQUIREMENTS
+==============================================================================
+
+- Neovim 0.10.0 or higher
+
+==============================================================================
+INSTALLATION
+==============================================================================
+
+Install with lazy.nvim:
+
+```lua
+{
+  "kaze-k/funline.nvim",
+  config = function()
+    require("my_statusline") -- Your statusline config
+  end
+}
+```
+
+If you're using [funline-base.nvim](https://github.com/kaze-k/funline-base.nvim), install it as follows:
+
+```lua
+{
+  "kaze-k/funline-base.nvim",
+  dependencies = { "kaze-k/funline.nvim" },
+  config = function()
+    require("funline-base").setup()
+  end
+}
+```
+
+==============================================================================
+COMMANDS
+==============================================================================
+
+- `:FunlineToggle`  Toggle funline (open/close).
+- `:FunlineOpen`    Open funline.
+- `:FunlineClose`   Close funline.
+- `:FunlineStop`    Stop funline refresh.
+- `:FunlineStart`   Start funline refresh.
+- `:FunlineReload`  Reload funline.
+
+==============================================================================
+API
+==============================================================================
+
+- `require("funline").toggle()`   Toggle funline (open/close).
+- `require("funline").open()`     Open funline.
+- `require("funline").close()`    Close funline.
+- `require("funline").stop()`     Stop funline refresh.
+- `require("funline").start()`    Start funline refresh.
+- `require("funline").reload()`   Reload funline.
+
+==============================================================================
+CONFIGURATION
+==============================================================================
+
+See the `config.lua` for full configuration options:
+
+```lua
+-- Example configuration:
+---@class Line
+---@field left? table
+---@field mid? table
+---@field right? table
+
+---@class Highlights
+---@field left? vim.api.keyset.highlight
+---@field mid? vim.api.keyset.highlight
+---@field right? vim.api.keyset.highlight
+
+---@class Refresh
+---@field timeout? number
+---@field interval? number
+
+---@class Config
+---@field statusline? Line
+---@field specialline? Line
+---@field highlights? Highlights
+---@field specialtypes? table
+---@field refresh? Refresh
+---@field handle_update? function
+
+require("funline").setup({
+  statusline = {
+    left = {...},
+    mid = {...},
+    right = {...},
+  },
+  specialline = {
+    left = {...},
+    mid = {...},
+    right = {...},
+  },
+  highlights = {
+    left = {...},
+    mid = {...},
+    right = {...},
+  },
+  specialtypes = {},
+  refresh = {
+    timeout = 0,
+    interval = 1000,
+  },
+  handle_update = function(update)
+    if ... then
+      update(true)
+    else
+      update(false)
+    end
+  end,
+})
+```
+
+==============================================================================
+COMPONENT EXAMPLES
+==============================================================================
+
+### Default Properties
+
+```lua
+---@class Component.Props
+---@field condition boolean
+---@field icon string
+---@field provider string
+---@field padding { left: string, right: string }
+---@field hl vim.api.keyset.highlight
+
+local DEFAULT_PROPS = {
+  condition = true,
+  icon = "",
+  provider = "",
+  padding = { left = "", right = "" },
+  hl = {},
+}
+```
+
+### Dynamic Component
+
+```lua
+M.example = function(ctx)
+  if ... then
+    ctx.refresh(1000) -- refresh every 1000ms
+  else
+    ctx.done() -- stop this component refresh
+  end
+
+  return {
+    condition = true, -- whether to display
+    icon = "😉", -- fun icon
+    provider = "Hello, World!", -- display text
+    padding = { left = " ", right = " " }, -- padding
+    hl = { fg = "#ff0000", bg = "#00ff00", bold = true }, -- highlight
+  }
+end
+```
+
+### Static Component
+
+```lua
+M.example = {
+  condition = true, -- whether to display
+  icon = "😉", -- fun icon
+  provider = "Hello, World!", -- display text
+  padding = { left = " ", right = " " }, -- padding
+  hl = { fg = "#ff0000", bg = "#00ff00", bold = true }, -- highlight
+}
+```
+
+==============================================================================
+LICENSE
+==============================================================================
+
+This plugin is licensed under the MIT License.
+
+See LICENSE for more details.
