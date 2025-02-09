@@ -28,13 +28,6 @@ local function reload(options)
   })
 end
 
-M.toggle = Funline.toggle
-M.open = Funline.open
-M.close = Funline.close
-M.stop = Funline.stop
-M.start = Funline.start
-M.reload = Funline.reload
-
 local merged_config
 
 function M.setup(opts)
@@ -43,5 +36,12 @@ function M.setup(opts)
   command()
   reload(merged_config)
 end
+
+M.toggle = Funline.toggle
+M.open = Funline.open
+M.close = Funline.close
+M.stop = Funline.stop
+M.start = Funline.start
+M.reload = Funline.reload
 
 return M
