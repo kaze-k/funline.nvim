@@ -23,7 +23,7 @@ local M = {}
 ---@field specialline? Line
 ---@field highlights? Highlights
 ---@field specialtypes? table
----@field refresh? Refresh
+---@field refresh? Refresh | boolean
 ---@field handle_update? function
 M.default = {
   statusline = {
@@ -42,10 +42,7 @@ M.default = {
     right = {},
   },
   specialtypes = {},
-  refresh = {
-    timeout = 0,
-    interval = 1000,
-  },
+  refresh = false,
   handle_update = nil,
 }
 
