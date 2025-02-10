@@ -108,7 +108,7 @@ It was inspired by [galaxyline](https://github.com/nvimdev/galaxyline.nvim) and 
 ---@field specialline? Line
 ---@field highlights? Highlights
 ---@field specialtypes? table
----@field refresh? Refresh
+---@field refresh? Refresh | boolean
 ---@field handle_update? function
 require("funline").setup({
   statusline = {
