@@ -328,7 +328,7 @@ end
 
 Funline.open = function()
   if instance == nil then
-    Funline:new(setup_config)
+    Funline:new(setup_config or Funline.setup)
   end
 end
 
@@ -365,8 +365,9 @@ end
 Funline.reload = function()
   if instance then
     instance:new(setup_config)
+  else
+    Funline:new(setup_config or Funline.setup)
   end
-  Funline:new(setup_config)
 end
 
 return Funline

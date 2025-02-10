@@ -28,13 +28,13 @@ local function reload(options)
   })
 end
 
-local merged_config
+local setup_config = config.default
 
 function M.setup(opts)
-  merged_config = utils.merge_config(opts or {}, config.default)
-  Funline:new(merged_config)
+  setup_config = utils.merge_config(opts or {}, config.default)
+  Funline:new(setup_config)
   command()
-  reload(merged_config)
+  reload(setup_config)
 end
 
 M.toggle = Funline.toggle
