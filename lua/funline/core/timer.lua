@@ -88,6 +88,10 @@ function Timer:reset()
 end
 
 function Timer:refresh(interval, name)
+  if self.status.isStop then
+    return
+  end
+
   if not component_intervals[name] or component_intervals[name] ~= interval then
     component_intervals[name] = interval
     self:reset()
@@ -95,6 +99,10 @@ function Timer:refresh(interval, name)
 end
 
 function Timer:done(name)
+  if self.status.isStop then
+    return
+  end
+
   if component_intervals[name] then
     component_intervals[name] = nil
     self:reset()
