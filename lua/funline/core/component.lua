@@ -42,15 +42,20 @@ function Component:new(name, timer, props)
   return instance
 end
 
-function Component:init(name, timer, props)
+function Component:get_callbacks()
   local refresh = function(interval) self.timer:refresh(interval, self.name) end
-
   local done = function() self.timer:done(self.name) end
 
   local callbacks = {
     refresh = refresh,
     done = done,
   }
+
+  return callbacks
+end
+
+function Component:init(name, timer, props)
+  local callbacks = self:get_callbacks()
 
   self.name = name
   self.timer = timer
