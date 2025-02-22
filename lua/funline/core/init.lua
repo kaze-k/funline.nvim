@@ -90,11 +90,13 @@ local hl_groups = {
 local isCalled = false
 
 local handle_render = function()
-  if instance then
-    instance:update_handler()
-    if instance:get_status() then
-      instance:render()
-    end
+  if not instance then
+    return
+  end
+
+  instance:update_handler()
+  if instance:get_status() then
+    instance:render()
   end
 end
 
