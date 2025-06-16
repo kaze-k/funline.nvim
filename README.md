@@ -178,7 +178,7 @@ M.example = function(ctx)
   return {
     condition = true, -- whether to display
     icon = "😉", -- fun icon
-    provider = "Hello, World!", -- display text
+    provider = os.date("%H:%M:%S"), -- display text
     padding = { left = " ", right = " " }, -- padding
     hl = { fg = "#ff0000", bg = "#00ff00", bold = true }, -- highlight
   }
