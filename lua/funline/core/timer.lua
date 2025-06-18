@@ -13,20 +13,23 @@ local status = {
 ---@field timeout integer
 ---@field interval integer
 ---@field status Timer.Status
+---@field component_intervals table
+---@field fastest integer | nil
+---@field finded_fastest boolean
 local Timer = {
   uv_timer = nil,
   timeout = 0,
   interval = 0,
   status = status,
+  component_intervals = {},
+  fastest = nil,
+  finded_fastest = false,
 }
 
 Timer.__index = Timer
 
 ---@type Timer | nil
 local instance = nil
-
--- component interval queue
-local component_intervals = {}
 
 function Timer:new(options)
   local timer = self:get_instance()
@@ -59,31 +62,32 @@ function Timer:init(options)
 end
 
 function Timer:get_fastest_interval()
-  local fastest = nil
-  for _, interval in pairs(component_intervals) do
-    if fastest == nil or interval < fastest then
-      fastest = interval
+  for _, interval in pairs(self.component_intervals) do
+    if self.fastest == nil or interval < self.fastest then
+      self.fastest = interval
     end
   end
-  return fastest
+
+  self.finded_fastest = true
 end
 
 function Timer:reset()
-  local fastest = self:get_fastest_interval()
+  if self.fastest == nil or not self.finded_fastest then
+    self:get_fastest_interval()
+  end
+
   local current_interval = self.uv_timer:get_repeat()
 
-  if fastest == nil then
+  if self.fastest == nil then
     if current_interval ~= self.interval then
       self.uv_timer:set_repeat(self.interval)
     end
-    return
-  end
-
-  if fastest < self.interval and fastest ~= current_interval then
-    self.uv_timer:set_repeat(fastest)
+  elseif self.fastest < self.interval and self.fastest ~= current_interval then
+    self.uv_timer:set_repeat(self.fastest)
   else
     self.uv_timer:set_repeat(self.interval)
   end
+
   self.uv_timer:again()
 end
 
@@ -92,8 +96,11 @@ function Timer:refresh(interval, name)
     return
   end
 
-  if not component_intervals[name] or component_intervals[name] ~= interval then
-    component_intervals[name] = interval
+  if not self.component_intervals[name] or self.component_intervals[name] ~= interval then
+    self.component_intervals[name] = interval
+    if self.fastest == nil or interval < self.fastest then
+      self.finded_fastest = false
+    end
     self:reset()
   end
 end
@@ -103,8 +110,9 @@ function Timer:done(name)
     return
   end
 
-  if component_intervals[name] then
-    component_intervals[name] = nil
+  if self.component_intervals[name] then
+    self.component_intervals[name] = nil
+    self.finded_fastest = false
     self:reset()
   end
 end
