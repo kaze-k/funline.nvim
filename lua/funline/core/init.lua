@@ -302,11 +302,11 @@ function Funline:render()
     specialline_components_names.right
   )
 
-  self:set_statusline(statusline)
+  utils.defer_neovide_redraw(function() self:set_statusline(statusline) end)
 
   for _, specialtype in ipairs(self.setup.specialtypes) do
     if vim.bo.filetype == specialtype or vim.bo.buftype == specialtype then
-      self:set_statusline(specialline)
+      utils.defer_neovide_redraw(function() self:set_statusline(specialline) end)
       break
     end
   end
