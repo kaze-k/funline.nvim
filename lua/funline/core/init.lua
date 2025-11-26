@@ -159,20 +159,12 @@ function Funline:init(options)
   end
 
   if next(self.setup.specialtypes) ~= nil then
-    self.specialtypes = self:make_set(self.setup.specialtypes)
+    self.specialtypes = utils.make_set(self.setup.specialtypes)
   end
 
   if self.timer == nil then
     self.timer = Timer:new(self.setup.refresh)
   end
-end
-
-function Funline:make_set(list)
-  local set = {}
-  for _, v in ipairs(list) do
-    set[v] = true
-  end
-  return set
 end
 
 function Funline:set_line()

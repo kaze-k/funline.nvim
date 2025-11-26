@@ -32,6 +32,14 @@ function M.set_hl(hl, section, reset)
   return string.format("%%#%s#%s", hl, section)
 end
 
+function M.make_set(list)
+  local set = {}
+  for _, v in ipairs(list) do
+    set[v] = true
+  end
+  return set
+end
+
 function M.defer_neovide_redraw(fn)
   if neovide and neovide.disable_redraw then
     neovide.disable_redraw()
