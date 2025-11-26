@@ -36,6 +36,7 @@ local Funline = {
   autocmd_id = nil,
   status = status,
   setup = setup,
+  specialtypes = {},
 }
 
 Funline.__index = Funline
@@ -157,9 +158,21 @@ function Funline:init(options)
     self.setup.handle_update = options.handle_update
   end
 
+  if next(self.setup.specialtypes) ~= nil then
+    self.specialtypes = self:make_set(self.setup.specialtypes)
+  end
+
   if self.timer == nil then
     self.timer = Timer:new(self.setup.refresh)
   end
+end
+
+function Funline:make_set(list)
+  local set = {}
+  for _, v in ipairs(list) do
+    set[v] = true
+  end
+  return set
 end
 
 function Funline:set_line()
@@ -302,14 +315,11 @@ function Funline:render()
     specialline_components_names.right
   )
 
-  utils.defer_neovide_redraw(function() self:set_statusline(statusline) end)
-
-  for _, specialtype in ipairs(self.setup.specialtypes) do
-    if vim.bo.filetype == specialtype or vim.bo.buftype == specialtype then
-      utils.defer_neovide_redraw(function() self:set_statusline(specialline) end)
-      break
-    end
+  if self.specialtypes[vim.bo.filetype] or self.specialtypes[vim.bo.buftype] then
+    return utils.defer_neovide_redraw(function() self:set_statusline(specialline) end)
   end
+
+  return utils.defer_neovide_redraw(function() self:set_statusline(statusline) end)
 end
 
 function Funline:destroy()
